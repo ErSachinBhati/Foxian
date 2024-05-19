@@ -186,95 +186,97 @@ function startStallmanQuiz() {
 
     ];
 
-      // Shuffle the questions array
     const shuffledQuestions = questions.sort(() => Math.random() - 0.5).slice(0, 10);
 
-    const quizPage = document.createElement("div");
-    quizPage.classList.add("quiz-page");
+const quizPage = document.createElement("div");
+quizPage.classList.add("quiz-page");
 
-    for (let i = 0; i < shuffledQuestions.length; i++) {
-        const questionContainer = document.createElement("div");
-        questionContainer.classList.add("question-container");
+for (let i = 0; i < shuffledQuestions.length; i++) {
+    const questionContainer = document.createElement("div");
+    questionContainer.classList.add("question-container");
 
-        const questionElement = document.createElement("h3");
-        questionElement.textContent = shuffledQuestions[i].question;
+    const questionElement = document.createElement("h3");
+    questionElement.textContent = shuffledQuestions[i].question;
 
-        const optionsContainer = document.createElement("div");
-        optionsContainer.classList.add("options-container");
+    const optionsContainer = document.createElement("div");
+    optionsContainer.classList.add("options-container");
 
-        for (let j = 0; j < shuffledQuestions[i].options.length; j++) {
-            const optionElement = document.createElement("div");
-            optionElement.classList.add("option");
-            optionElement.textContent = shuffledQuestions[i].options[j];
+    for (let j = 0; j < shuffledQuestions[i].options.length; j++) {
+        const optionElement = document.createElement("div");
+        optionElement.classList.add("option");
+        optionElement.textContent = shuffledQuestions[i].options[j];
 
-            optionElement.addEventListener("click", function () {
-                toggleSelected(optionElement);
-                storeUserAnswer(i, optionElement.textContent);
-            });
+        optionElement.addEventListener("click", function () {
+            toggleSelected(optionElement);
+            storeUserAnswer(i, optionElement.textContent);
+        });
 
-            optionsContainer.appendChild(optionElement);
-        }
-
-        questionContainer.appendChild(questionElement);
-        questionContainer.appendChild(optionsContainer);
-        quizPage.appendChild(questionContainer);
+        optionsContainer.appendChild(optionElement);
     }
 
-    document.body.innerHTML = "";
-    document.body.appendChild(quizPage);
+    questionContainer.appendChild(questionElement);
+    questionContainer.appendChild(optionsContainer);
+    quizPage.appendChild(questionContainer);
+}
 
-    const buttonContainer = document.createElement("div");
-    buttonContainer.classList.add("button-container");
+document.body.innerHTML = "";
+document.body.appendChild(quizPage);
 
-    const submitButton = document.createElement("button");
-    submitButton.textContent = "Submit";
-    submitButton.style.fontSize = "30px";
-    submitButton.style.backgroundColor = "#900C3F";
-    submitButton.style.color = "white";
-    submitButton.style.padding = "10px 20px";
-    submitButton.style.border = "none";
-    submitButton.style.borderRadius = "6px";
+const buttonContainer = document.createElement("div");
+buttonContainer.classList.add("button-container");
 
-    submitButton.addEventListener("click", function () {
-        submitQuiz(shuffledQuestions);
-    });
+const submitButton = document.createElement("button");
+submitButton.textContent = "Submit";
+submitButton.style.fontSize = "30px";
+submitButton.style.backgroundColor = "#900C3F";
+submitButton.style.color = "white";
+submitButton.style.padding = "10px 20px";
+submitButton.style.border = "none";
+submitButton.style.borderRadius = "6px";
 
-    buttonContainer.appendChild(submitButton);
+submitButton.addEventListener("click", function () {
+    submitQuiz(shuffledQuestions);
+});
 
-    document.body.appendChild(buttonContainer);
+buttonContainer.appendChild(submitButton);
 
-    const style = document.createElement("style");
-    style.textContent = `
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .button-container {
-            margin-top: 20px;
-        }
-        .option.selected {
-            background-color: #4CAF50;
-            color: white;
-        }
-    `;
-    document.head.appendChild(style);
+document.body.appendChild(buttonContainer);
 
+const style = document.createElement("style");
+style.textContent = `
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .quiz-page {
+        margin-bottom: 30px; 
+    }
+    .button-container {
+        margin-top: 10px; 
+    }
+    .option.selected {
+        background-color: #4CAF50;
+        color: white;
+    }
+`;
+document.head.appendChild(style);
 
-    function storeUserAnswer(questionIndex, userAnswer) {
-        questions[questionIndex].userAnswer = userAnswer;
+function storeUserAnswer(questionIndex, userAnswer) {
+    questions[questionIndex].userAnswer = userAnswer;
+}
+
+function toggleSelected(optionElement) {
+    const optionsContainer = optionElement.parentElement;
+    const options = optionsContainer.getElementsByClassName("option");
+
+    for (let option of options) {
+        option.classList.remove("selected");
     }
 
-    function toggleSelected(optionElement) {
-        const optionsContainer = optionElement.parentElement;
-        const options = optionsContainer.getElementsByClassName("option");
+    optionElement.classList.add("selected");
+}
 
-        for (let option of options) {
-            option.classList.remove("selected");
-        }
-
-        optionElement.classList.add("selected");
-    }
 async function submitQuiz(questions) {
     let result = "<br><strong>Results:</strong><br>";
     let allQuestionsAnswered = true;
@@ -290,7 +292,7 @@ async function submitQuiz(questions) {
 
         result += `<br><strong>${questions[i].question}</strong><br>`;
         
-        // Color coding user answers
+ 
         if (isCorrect) {
             result += `<div>Your Answer: <span style="color: #006400;">${userAnswer}</span></div>`;
             result += `<div>Correct Answer: <span style="color: #006400;">${correctAnswer}</span></div>`;
@@ -299,7 +301,7 @@ async function submitQuiz(questions) {
             result += `<div>Correct Answer: <span style="color: #006400;">${correctAnswer}</span></div>`;
         }
         
-        // Explanation in blue
+ 
         result += `<div>Explanation: <span style="color: #0000FF;">${explanationHTML || "No explanation available"}</span></div>`;
 
         if (isCorrect) {
@@ -365,37 +367,31 @@ async function submitQuiz(questions) {
     document.body.appendChild(resultPage);
 }
 
-       
-        
- 
+async function okh(correctAnswersCount, totalQuestions) {
+    try {
+        const totalScore = correctAnswersCount;
 
-    async function okh(correctAnswersCount, totalQuestions) {
-        try {
-            const totalScore = correctAnswersCount;
+        const documentToInsert = {
+            correctAnswers: correctAnswersCount.toString(),
+            totalQuestions: totalQuestions.toString(),
+            totalScore: totalScore  
+        };
 
- 
-            const documentToInsert = {
-                correctAnswers: correctAnswersCount.toString(),
-                totalQuestions: totalQuestions.toString(),
-                totalScore: totalScore  
-            };
+        const response = await fetch('/api/quizResults', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(documentToInsert)
+        });
 
- 
-            const response = await fetch('/api/quizResults', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(documentToInsert)
-            });
-
-            if (response.ok) {
-                console.log('Quiz results saved successfully');
-            } else {
-                console.error('Failed to save quiz results:', response.statusText);
-            }
-        } catch (error) {
-            console.error('Error saving quiz results:', error);
+        if (response.ok) {
+            console.log('Quiz results saved successfully');
+        } else {
+            console.error('Failed to save quiz results:', response.statusText);
         }
+    } catch (error) {
+        console.error('Error saving quiz results:', error);
     }
+}
 }
