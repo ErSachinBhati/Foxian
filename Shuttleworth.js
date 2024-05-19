@@ -183,6 +183,7 @@ function startShuttleworthQuiz() {
     "explanation": "The Constitutional Court of South Africa reversed the decision on June 18, 2015."
   },
 ];
+ 
 const shuffledQuestions = questions.sort(() => Math.random() - 0.5).slice(0, 10);
 
 const quizPage = document.createElement("div");
