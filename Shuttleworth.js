@@ -276,31 +276,13 @@ function toggleSelected(optionElement) {
 }
 
 async function submitQuiz(questions) {
-    let result = "<br><strong>Results:</strong><br>";
     let allQuestionsAnswered = true;
     let correctAnswersCount = 0;
 
     for (let i = 0; i < questions.length; i++) {
         const userAnswer = questions[i].userAnswer;
         const correctAnswer = questions[i].correctAnswer;
-        const explanationLines = questions[i].explanation.split('\n');
-        const explanationHTML = explanationLines.map(line => `${line}<br>`).join('');
-
         const isCorrect = userAnswer === correctAnswer;
-
-        result += `<br><strong>${questions[i].question}</strong><br>`;
-        
- 
-        if (isCorrect) {
-            result += `<div>Your Answer: <span style="color: #006400;">${userAnswer}</span></div>`;
-            result += `<div>Correct Answer: <span style="color: #006400;">${correctAnswer}</span></div>`;
-        } else {
-            result += `<div>Your Answer: <span style="color: #FF0000;">${userAnswer}</span></div>`;
-            result += `<div>Correct Answer: <span style="color: #006400;">${correctAnswer}</span></div>`;
-        }
-        
- 
-        result += `<div>Explanation: <span style="color: #0000FF;">${explanationHTML || "No explanation available"}</span></div>`;
 
         if (isCorrect) {
             correctAnswersCount++;
@@ -322,15 +304,42 @@ async function submitQuiz(questions) {
 
     await okh(correctAnswersCount, totalQuestions, scorePercentage);
 
+    let result = `
+        <div class="score" style="font-size: 24px; color: #622569; margin-top: 20px;">
+            <strong>Total Score: <span style="color: #622569;">${scoreText}</span></strong>
+        </div>
+        <br>
+    `;
+
+    for (let i = 0; i < questions.length; i++) {
+        const userAnswer = questions[i].userAnswer;
+        const correctAnswer = questions[i].correctAnswer;
+        const explanationLines = questions[i].explanation.split('\n');
+        const explanationHTML = explanationLines.map(line => `${line}<br>`).join('');
+
+        const isCorrect = userAnswer === correctAnswer;
+
+        result += `<br><strong>${questions[i].question}</strong><br>`;
+        
+        if (isCorrect) {
+            result += `<div>Your Answer: <span style="color: #006400;">${userAnswer}</span></div>`;
+            result += `<div>Correct Answer: <span style="color: #006400;">${correctAnswer}</span></div>`;
+        } else {
+            result += `<div>Your Answer: <span style="color: #FF0000;">${userAnswer}</span></div>`;
+            result += `<div>Correct Answer: <span style="color: #006400;">${correctAnswer}</span></div>`;
+        }
+        
+        result += `<div>Explanation: <span style="color: #0000FF;">${explanationHTML || "No explanation available"}</span></div>`;
+    }
+
     const resultPage = document.createElement("div");
     resultPage.classList.add("result-page");
 
     const resultContainer = document.createElement("div");
     resultContainer.id = "result-container";
     resultContainer.innerHTML = `
-        <h2 style="font-size: 28px; color: #4caf50;">Impressive Quiz Results</h2>
+        <h2 style="font-size: 28px; color: #008000;">Quiz Results</h2>
         ${result}
-        <div class="score" style="font-size: 24px; color: #4caf50; margin-top: 20px;">Total Score: <span style="color: #4caf50;">${scoreText}</span></div>
     `;
 
     resultContainer.style.textAlign = "center";
